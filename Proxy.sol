@@ -6,28 +6,41 @@ contract Proxy{
     bytes32 public constant IMPLEMENTATION_SOT = bytes32(uint(keccak256("eip1967.proxy.implementation")) - 1);
     bytes32 public constant ADMIN_SOT = bytes32(uint(keccak256("eip1967.proxy.admin")) - 1);
 
-    constructor(){
-        setAdmin(msg.sender);
+    constructor(address addr){
+        StorageSlot.getAddressSlot(ADMIN_SOT).value = addr;
     }
 
-    function upgradeTo(address impl) public{
+    modifier onlyOwner(){
+        if(getAdmin() == msg.sender){
+            _;
+        }
+        else{
+             _delegate(getImplementaion());
+        }
+    }
+
+    function upgradeTo(address impl) public onlyOwner{
         setImplementaion(impl);
     }
 
-    function setAdmin(address _address) public{
+    function setAdmin(address _address) onlyOwner  public{
         StorageSlot.getAddressSlot(ADMIN_SOT).value = _address;
     }
 
-    function setImplementaion(address _address) public{
+    function setImplementaion(address _address) onlyOwner public{
         require(_address.code.length > 0, "should not be EOA");
         StorageSlot.getAddressSlot(IMPLEMENTATION_SOT).value = _address;
     }
 
-    function getAdmin() view public returns(address){
+    function getAdmin() public view returns(address){
         return StorageSlot.getAddressSlot(ADMIN_SOT).value;
-    } 
+    }
 
-    function getImplementaion() view public returns(address){
+    function duplicate() public onlyOwner returns (address){
+        return address(1);
+    }
+
+    function getImplementaion() public view returns(address){
         return StorageSlot.getAddressSlot(IMPLEMENTATION_SOT).value;
     } 
 

@@ -7,4 +7,8 @@ contract CounterV1{
     function inc() public{
         count += 1;
     }
+
+    function duplicate() public pure returns (address){
+        return address(0);
+    }
 }

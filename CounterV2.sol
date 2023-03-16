@@ -11,4 +11,8 @@ contract CounterV1{
     function dec() public{
         count -= 1;
     }
+
+    function duplicate() public pure returns (address){
+        return address(0);
+    }
 }
