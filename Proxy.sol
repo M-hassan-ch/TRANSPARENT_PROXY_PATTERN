@@ -6,8 +6,8 @@ contract Proxy{
     bytes32 public constant IMPLEMENTATION_SOT = bytes32(uint(keccak256("eip1967.proxy.implementation")) - 1);
     bytes32 public constant ADMIN_SOT = bytes32(uint(keccak256("eip1967.proxy.admin")) - 1);
 
-    constructor(address addr){
-        StorageSlot.getAddressSlot(ADMIN_SOT).value = addr;
+    constructor(address proxyAdmin){
+        StorageSlot.getAddressSlot(ADMIN_SOT).value = proxyAdmin;
     }
 
     modifier onlyOwner(){
